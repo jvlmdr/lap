@@ -49,6 +49,24 @@ def test_lapjv_noextension():
     assert np.all(ret[2] == [2, 0, 1, 3])
 
 
+def test_lapjv_extension_with_inf_tall():
+    cost = np.asarray([[np.inf, 9], [11, np.inf], [8, 7]], dtype=float)
+    ret = lapjv(cost, extend_cost=True)
+    assert ret[0] == 17.0
+    # (0, 1), (2, 0)
+    np.testing.assert_equal(ret[1], [1, -1, 0])
+    np.testing.assert_equal(ret[2], [2, 0])
+
+
+def test_lapjv_extension_with_inf_wide():
+    cost = np.asarray([[np.inf, 11, 8], [8, np.inf, 7]], dtype=float)
+    ret = lapjv(cost, extend_cost=True)
+    assert ret[0] == 16.0
+    # (0, 2), (1, 0)
+    np.testing.assert_equal(ret[1], [2, 0])
+    np.testing.assert_equal(ret[2], [1, -1, 0])
+
+
 def test_lapjv_cost_limit():
     cost = get_dense_8x8_int()[0]
     ret = lapjv(cost[:3, :3], cost_limit=4.99)
