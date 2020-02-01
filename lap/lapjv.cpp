@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <limits>
 
 #include "lapjv.h"
 
@@ -14,7 +15,7 @@ int_t _ccrrt_dense(const uint_t n, cost_t *cost[],
 
     for (uint_t i = 0; i < n; i++) {
         x[i] = -1;
-        v[i] = LARGE;
+        v[i] = std::numeric_limits<cost_t>::max();
         y[i] = 0;
     }
     for (uint_t i = 0; i < n; i++) {
@@ -50,7 +51,7 @@ int_t _ccrrt_dense(const uint_t n, cost_t *cost[],
             free_rows[n_free_rows++] = i;
         } else if (unique[i]) {
             const int_t j = x[i];
-            cost_t min = LARGE;
+            cost_t min = std::numeric_limits<cost_t>::max();
             for (uint_t j2 = 0; j2 < n; j2++) {
                 if (j2 == (uint_t)j) {
                     continue;
@@ -95,7 +96,7 @@ int_t _carr_dense(
         j1 = 0;
         v1 = cost[free_i][0] - v[0];
         j2 = -1;
-        v2 = LARGE;
+        v2 = std::numeric_limits<cost_t>::max();
         for (uint_t j = 1; j < n; j++) {
             PRINTF("%d = %f %d = %f\n", j1, v1, j2, v2);
             const cost_t c = cost[free_i][j] - v[j];
