@@ -49,6 +49,19 @@ def test_lapjv_noextension():
     assert np.all(ret[2] == [2, 0, 1, 3])
 
 
+def test_lapjv_issue19():
+    L = 1000000
+    cost = np.asarray([
+        [-625, 2187.5, -156.25, L],
+        [-2500, L, -2500, -2500],
+        [-1015.625, -1015.625, L, L],
+        [L, L, L, L]])
+    ret = lapjv(cost, extend_cost=False)
+    assert ret[0] == -625 + -2500 + -1015.625 + L
+    # Solution is ambiguous.
+    assert np.all(ret[1] == [0, 2, 1, 3]) or np.all(ret[1] == [0, 3, 1, 2])
+
+
 def test_lapjv_cost_limit():
     cost = get_dense_8x8_int()[0]
     ret = lapjv(cost[:3, :3], cost_limit=4.99)
